@@ -1,0 +1,115 @@
+﻿using Photon.Pun;
+using System;
+using UnityEngine;
+
+namespace EyalPhoton.Game
+{
+    [RequireComponent(typeof(Animator))]
+    public class PlayerAnimation : MonoBehaviourPun
+    {
+        [SerializeField] private Animator animator = null;
+        [SerializeField] private bool IS_TEST = false;
+        private PlayerInput pInput = null;
+
+        private float lastHorizMovementStartTime = 0;
+        private float lastHorizMovementDir = 0;
+        private float lastVertMovementStartTime = 0;
+        private float lastVertMovementDir = 0;
+
+        // Use this for initialization
+        void Start()
+        {
+            this.pInput = GetComponentInParent<PlayerInput>();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (!IS_TEST)
+            {
+                if (photonView.IsMine)
+                {
+                    ApplyAnimations();
+                }
+            } else
+            {
+                ApplyAnimations();
+            }
+        }
+
+        private void ApplyAnimations()
+        {
+            bool right = this.pInput.movementInput.x > 0f, 
+                left = this.pInput.movementInput.x < 0f, 
+                up = this.pInput.movementInput.y > 0f, 
+                down = this.pInput.movementInput.y < 0f,
+                idle = this.pInput.movementInput == Vector2.zero;
+
+            // No direction => reset time moving and direction
+            if (!right && !left)
+            {
+                lastHorizMovementStartTime = 0;
+                lastHorizMovementDir = 0;
+            } // Changed direction => reset time moving direction
+            else if (right && lastHorizMovementDir <= 0 || left && lastHorizMovementDir >= 0)
+            {
+                lastHorizMovementStartTime = Time.time;
+                lastHorizMovementDir = right ? 1 : -1;
+            }
+            
+            if (!up && !down)
+            {
+                lastVertMovementStartTime = 0;
+                lastVertMovementDir = 0;
+            }
+            else if (up && lastVertMovementDir <= 0 || down && lastVertMovementDir >= 0)
+            {
+                lastVertMovementStartTime = Time.time;
+                lastVertMovementDir = up ? 1 : -1;
+            }
+
+            int dirCount = 0;
+
+            if (right || left)
+                dirCount++;
+            if (up || down)
+                dirCount++;
+
+            if (dirCount > 1)
+            {
+                var hPower = Math.Abs(this.pInput.movementInput.x);
+                var vPower = Math.Abs(this.pInput.movementInput.y);
+
+                if (hPower > vPower)
+                {
+                    down = false;
+                    up = false;
+                }
+                else if (vPower > hPower)
+                {
+                    right = false;
+                    left = false;
+                }
+                else
+                {
+                    if (lastHorizMovementStartTime > lastVertMovementStartTime)
+                    {
+                        down = false;
+                        up = false;
+                    }
+                    else
+                    {
+                        right = false;
+                        left = false;
+                    }
+                }
+            }
+
+            animator.SetBool("right", right);
+            animator.SetBool("left", left);
+            animator.SetBool("up", up);
+            animator.SetBool("down", down);
+            animator.SetBool("idle", idle);
+        }
+    }
+}
