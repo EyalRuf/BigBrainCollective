@@ -8,7 +8,6 @@ namespace EyalPhoton.Game
     public class Movement : MonoBehaviourPun, IPunObservable
     {
         [SerializeField] private float moveSpeed = 0f;
-        [SerializeField] private bool IS_TEST = false;
         private const float ROOM_BOUNDS_X_MIN = -7.96f;
         private const float ROOM_BOUNDS_X_MAX = 7.34f;
         private const float ROOM_BOUNDS_Y_MIN = -3.34f;
@@ -28,19 +27,13 @@ namespace EyalPhoton.Game
         // Update is called once per frame
         void Update()
         {
-            if (IS_TEST)
+            if (this.pInput.isTest || photonView.IsMine)
             {
                 this.applyLocalMovement();
-            } else
+            }
+            else
             {
-                if (photonView.IsMine)
-                {
-                    this.applyLocalMovement();
-                }
-                else
-                {
-                    this.applyNetworkMovement();
-                }
+                this.applyNetworkMovement();
             }
         }
 

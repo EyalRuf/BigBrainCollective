@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using EyalPhoton.Game;
 
 namespace EyalPhoton.Login
 {

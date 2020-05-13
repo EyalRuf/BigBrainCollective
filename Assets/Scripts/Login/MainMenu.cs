@@ -1,7 +1,6 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,8 +11,10 @@ namespace EyalPhoton.Login
         [SerializeField] private GameObject findGamePanel = null;
         [SerializeField] private GameObject waitingStatusPanel = null;
         [SerializeField] private TextMeshProUGUI waitingStatusText = null;
+        [SerializeField] private CharacterSelector characterSelector = null;
 
         private bool isConnecting = false;
+        private PlayerCustomPropsManager propsManager = new PlayerCustomPropsManager();
 
         private const string GAME_VER = "0.1";
         private const int MAX_PLAYERS = 20;
@@ -65,8 +66,11 @@ namespace EyalPhoton.Login
         {
             base.OnJoinedRoom();
 
-            waitingStatusText.text = "Player joined";
+            waitingStatusText.text = "Game found, Loading Scene";
             Debug.Log("Client successfuly joined the room");
+
+            // Setting player character according to selected
+            propsManager.SetCharId(characterSelector.chrIndex);
 
             PhotonNetwork.LoadLevel("Scene_Main");
         }

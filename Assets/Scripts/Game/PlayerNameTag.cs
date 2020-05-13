@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Photon.Pun;
-using System;
 using TMPro;
 
 namespace EyalPhoton.Game
@@ -17,7 +15,12 @@ namespace EyalPhoton.Game
 
         private void SetName()
         {
-            nameText.text = photonView.Owner.NickName;
+            nameText.text = "Name";
+
+            if (photonView.Owner != null)
+            {
+                nameText.text = photonView.Owner.NickName;
+            }
         }
     }
 }
