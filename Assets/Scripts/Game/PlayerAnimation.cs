@@ -14,6 +14,7 @@ namespace EyalPhoton.Game
         private PlayerInput pInput = null;
         private PlayerCustomPropsManager  playerProps = new PlayerCustomPropsManager();
         private int characterId = -1;
+        private bool characterSet = false;
 
         private float lastHorizMovementStartTime = 0;
         private float lastHorizMovementDir = 0;
@@ -30,25 +31,18 @@ namespace EyalPhoton.Game
                 this.characterId = playerProps.GetCharId(photonView);
                 animator.runtimeAnimatorController = characterList[characterId];
             } // Set network player anim conroller
-            else if (characterId != -1)
-            {
-                animator.runtimeAnimatorController = characterList[characterId];
-            }
-
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (!this.pInput.isTest)
-            {
-                if (photonView.IsMine)
-                {
-                    ApplyAnimations();
-                }
-            } else
+            if (this.pInput.isTest || photonView.IsMine)
             {
                 ApplyAnimations();
+            } else if (!this.characterSet && this.characterId != -1)
+            {
+                this.animator.runtimeAnimatorController = characterList[characterId];
+                this.characterSet = true;
             }
         }
 
