@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6157010941326551150}
-  IS_TEST: 0
+  characterList: []
 --- !u!114 &5804180846809128702
 MonoBehaviour:
   m_ObjectHideFlags: 0
