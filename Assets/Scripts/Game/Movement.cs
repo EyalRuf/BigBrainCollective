@@ -41,7 +41,7 @@ namespace EyalPhoton.Game
         {
             Vector2 movement = this.pInput.movementInput;
             cController.Move(movement * this.moveSpeed * Time.deltaTime);
-            this.ensureBoundaries();
+            //this.ensureBoundaries();
         }
 
         private void applyNetworkMovement()
