@@ -17,6 +17,8 @@ namespace EyalPhoton.Game
         private CharacterController cController = null;
         private Vector2 remotePlayerPos = Vector2.zero;
 
+        private bool isInteractingWithBoard = false;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -29,7 +31,10 @@ namespace EyalPhoton.Game
         {
             if (this.pInput.isTest || photonView.IsMine)
             {
-                this.applyLocalMovement();
+                if (!isInteractingWithBoard)
+                {
+                    this.applyLocalMovement();
+                }
             }
             else
             {

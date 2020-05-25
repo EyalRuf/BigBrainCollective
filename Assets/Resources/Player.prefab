@@ -194,13 +194,16 @@ MonoBehaviour:
   pInput: {fileID: 4846205361358724266}
   SR: {fileID: 2167574863868660318}
   emojis:
-  - {fileID: 21300000, guid: 2d1430ab4d88670418e8537fc4a25672, type: 3}
-  - {fileID: 21300000, guid: a531181bcd6844d41be86cb0240b8dc5, type: 3}
-  - {fileID: 21300000, guid: 2794e283995486746bb2da276bd72f9b, type: 3}
-  - {fileID: 21300000, guid: 70fc5822a699a6346b0841ed569f0e27, type: 3}
-  - {fileID: 21300000, guid: 853d4ecae1a54294bb5b08b5d78d7bfa, type: 3}
-  - {fileID: 21300000, guid: 6093a64b54f7732418e839e9bb90ee1d, type: 3}
-  - {fileID: 21300000, guid: 97b50152daded704a8b0cd84fbe8bdfe, type: 3}
+  - {fileID: 21300000, guid: c146ea2492455e44093b9b61a7da2a60, type: 3}
+  - {fileID: 21300000, guid: d7174e4e8c3e36f4293f1b09025cc438, type: 3}
+  - {fileID: 21300000, guid: c2e8eb9c0e1b5904aa820108680cf185, type: 3}
+  - {fileID: 21300000, guid: 3b9162b72ff13a74dbc4a5ad51fbf941, type: 3}
+  - {fileID: 21300000, guid: dc2c1dd24a3da3a4d9756270f08cc7e4, type: 3}
+  - {fileID: 21300000, guid: 12e188e920184144e9c05960f932372d, type: 3}
+  - {fileID: 21300000, guid: def3eeb91f5e347428dea58a33beda4c, type: 3}
+  - {fileID: 21300000, guid: 4493558636dee394794b08903f48a445, type: 3}
+  - {fileID: 21300000, guid: 49a0860a544d0f8499549e5747b09d84, type: 3}
+  - {fileID: 21300000, guid: a02dee99af37c724fa49dc2d17728ced, type: 3}
 --- !u!114 &667249066
 MonoBehaviour:
   m_ObjectHideFlags: 0

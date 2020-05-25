@@ -1,17 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Photon.Pun;
 
 namespace EyalPhoton.Game
 {
-    public class PlayerInput : MonoBehaviour
+    public class PlayerInput : MonoBehaviourPun
     {
         [SerializeField] public bool isTest = false;
         public Vector2 movementInput { get; private set; }
         public bool[] isNumberClicked { get; private set; }
 
+        public bool inputLocked { get; set; }
+        public bool isLocal { get; private set; }
         void Start()
         {
+            inputLocked = false;
+            isLocal = this.photonView.IsMine;
             isNumberClicked = new bool[10];
             for (var i = 0; i < 10; i++)
             {
@@ -22,8 +27,24 @@ namespace EyalPhoton.Game
         // Update is called once per frame
         void Update()
         {
-            this.movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            this.SetNumbersClicked();
+            if (inputLocked)
+            {
+                this.movementInput = Vector2.zero;
+                this.isNumberClicked[0] = false;
+                this.isNumberClicked[1] = false;
+                this.isNumberClicked[2] = false;
+                this.isNumberClicked[3] = false;
+                this.isNumberClicked[4] = false;
+                this.isNumberClicked[5] = false;
+                this.isNumberClicked[6] = false;
+                this.isNumberClicked[7] = false;
+                this.isNumberClicked[8] = false;
+                this.isNumberClicked[9] = false;
+            } else
+            {
+                this.movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+                this.SetNumbersClicked();
+            }
         }
 
         private void SetNumbersClicked()
@@ -38,6 +59,14 @@ namespace EyalPhoton.Game
             this.isNumberClicked[7] = Input.GetKey(KeyCode.Alpha7);
             this.isNumberClicked[8] = Input.GetKey(KeyCode.Alpha8);
             this.isNumberClicked[9] = Input.GetKey(KeyCode.Alpha9);
+        }
+
+        public void lockInput (bool loc)
+        {
+            if (this.isLocal)
+            {
+                this.inputLocked = loc;
+            }
         }
     }
 }
