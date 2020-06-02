@@ -37,10 +37,10 @@ namespace EyalPhoton.Game.Board
             this.comments = post.comments;
         }
 
-        //public void addComment (int commentorActorNum, string commentText)
-        //{
-        //    this.comments.Add(new PostComment(commentorActorNum, commentText));
-        //}
+        public bool didActorCommentOnPost (int actorNum)
+        {
+            return comments.FindAll(comment => comment.commentorActorNum == actorNum).Count > 0;
+        }
 
         public static byte[] Serialize(object customobject)
         {

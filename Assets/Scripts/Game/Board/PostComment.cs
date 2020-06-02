@@ -7,13 +7,13 @@ namespace EyalPhoton.Game.Board
     [Serializable]
     public class PostComment
     {
-        public int creatorActorNum { get; private set; }
+        public int commentorActorNum { get; private set; }
         public string commentText { get; private set; }
         public bool isApproved { get; private set; }
 
-        public PostComment(int creatorActorNum, string commentText)
+        public PostComment(int commentorActorNum, string commentText)
         {
-            this.creatorActorNum = creatorActorNum;
+            this.commentorActorNum = commentorActorNum;
             this.commentText = commentText;
             this.isApproved = false;
         }

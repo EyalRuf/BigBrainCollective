@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7085901959097439581}
   - component: {fileID: 716372931057057918}
   - component: {fileID: 8154838054147061956}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 466503354952195620}
   - component: {fileID: 667249066}
   - component: {fileID: 667249065}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Emoji
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -194,16 +194,16 @@ MonoBehaviour:
   pInput: {fileID: 4846205361358724266}
   SR: {fileID: 2167574863868660318}
   emojis:
-  - {fileID: 21300000, guid: c146ea2492455e44093b9b61a7da2a60, type: 3}
-  - {fileID: 21300000, guid: d7174e4e8c3e36f4293f1b09025cc438, type: 3}
   - {fileID: 21300000, guid: c2e8eb9c0e1b5904aa820108680cf185, type: 3}
+  - {fileID: 21300000, guid: d7174e4e8c3e36f4293f1b09025cc438, type: 3}
   - {fileID: 21300000, guid: 3b9162b72ff13a74dbc4a5ad51fbf941, type: 3}
+  - {fileID: 21300000, guid: 4493558636dee394794b08903f48a445, type: 3}
+  - {fileID: 21300000, guid: c146ea2492455e44093b9b61a7da2a60, type: 3}
+  - {fileID: 21300000, guid: 49a0860a544d0f8499549e5747b09d84, type: 3}
   - {fileID: 21300000, guid: dc2c1dd24a3da3a4d9756270f08cc7e4, type: 3}
   - {fileID: 21300000, guid: 12e188e920184144e9c05960f932372d, type: 3}
   - {fileID: 21300000, guid: def3eeb91f5e347428dea58a33beda4c, type: 3}
-  - {fileID: 21300000, guid: 4493558636dee394794b08903f48a445, type: 3}
-  - {fileID: 21300000, guid: 49a0860a544d0f8499549e5747b09d84, type: 3}
-  - {fileID: 21300000, guid: a02dee99af37c724fa49dc2d17728ced, type: 3}
+  - {fileID: 21300000, guid: def3eeb91f5e347428dea58a33beda4c, type: 3}
 --- !u!114 &667249066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,7 +257,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4079642187924681856}
-  - component: {fileID: 3184106487462165801}
   - component: {fileID: 3468926066049676580}
   - component: {fileID: 2840080889074906754}
   - component: {fileID: 8630427547769971993}
@@ -266,7 +265,9 @@ GameObject:
   - component: {fileID: 8630427547769971994}
   - component: {fileID: 5434988846647064318}
   - component: {fileID: 5384224238377053928}
-  m_Layer: 9
+  - component: {fileID: 4268939305314327294}
+  - component: {fileID: 1687265883662067757}
+  m_Layer: 11
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -289,24 +290,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!143 &3184106487462165801
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5734607052336535467}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 1.2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.375
-  m_SkinWidth: 0.01
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: -0.25, z: 0}
 --- !u!212 &3468926066049676580
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -345,7 +328,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 867657899
   m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingOrder: 10
   m_Sprite: {fileID: -6973128790597912016, guid: 706224a99e926bb44a40cff287d3ff26,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -493,6 +476,43 @@ MonoBehaviour:
   - {fileID: 9100000, guid: 2cd9f646967e40c4293f47483ee4d9f0, type: 2}
   - {fileID: 9100000, guid: 43a76638ddc18ae4fa3ebe7fac1f6bf7, type: 2}
   - {fileID: 9100000, guid: 1370298c61639af488f08439affb0f46, type: 2}
+--- !u!50 &4268939305314327294
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5734607052336535467}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 1
+  m_Mass: 0.62928647
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!70 &1687265883662067757
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5734607052336535467}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.3}
+  m_Size: {x: 0.75, y: 1}
+  m_Direction: 0
 --- !u!1 &6821092094701483290
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,7 +524,7 @@ GameObject:
   - component: {fileID: 1425774232522274505}
   - component: {fileID: 6251308719164142351}
   - component: {fileID: 1906197813894418998}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Text_NameTag
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -660,7 +680,7 @@ GameObject:
   - component: {fileID: 3376337963685885459}
   - component: {fileID: 8273915568193121863}
   - component: {fileID: 3485494793529542202}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Canvas_NameTag
   m_TagString: UI
   m_Icon: {fileID: 0}

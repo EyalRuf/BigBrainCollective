@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Photon.Pun;
+using TMPro;
 using UnityEngine;
 
 namespace EyalPhoton.Game.Board
@@ -7,8 +8,11 @@ namespace EyalPhoton.Game.Board
     {
         [SerializeField] private TextMeshProUGUI titleText = null;
         [SerializeField] private TextMeshProUGUI bodyText = null;
+        [SerializeField] private GameObject commentsPanel = null;
+        [SerializeField] private PostCommentGameObj commentPrefab = null;
 
         private bool expanded = false;
+        private bool isMyPost = false;
         public BoardPost boardPost { get; set; }
 
         void Start ()
@@ -26,12 +30,39 @@ namespace EyalPhoton.Game.Board
                 }
             }
         }
+        private void UpdateMyPostAndSpawnComments()
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                this.isMyPost = this.boardPost.postCreatorActorNum == PhotonNetwork.LocalPlayer.ActorNumber;
+            }
+            else
+            {
+                this.isMyPost = false;
+            }
+
+            if (this.isMyPost && commentsPanel != null)
+            {
+                PostCommentGameObj[] comments = this.commentsPanel.GetComponentsInChildren<PostCommentGameObj>();
+                for (int i = 0; i < comments.Length; i++)
+                {
+                    comments[i].Destroy();
+                }
+
+                for (int i = 0; i < this.boardPost.comments.Count; i++)
+                {
+                    PostCommentGameObj commentGameObj = Instantiate(commentPrefab, commentsPanel.transform);
+                    commentGameObj.comment = this.boardPost.comments[i];
+                }
+            }
+        }
 
         public void Expand()
         {
             expanded = true;
             this.titleText.text = this.boardPost.postTitle;
             this.bodyText.text = this.boardPost.postBody;
+            this.UpdateMyPostAndSpawnComments();
         }
 
         public void Unexpand()
@@ -43,7 +74,7 @@ namespace EyalPhoton.Game.Board
         {
             if (boardPost != null && !expanded)
             {
-                SendMessageUpwards("PostClicked", boardPost);
+                SendMessageUpwards("ExpandPost", boardPost.postId);
             }
         }
 

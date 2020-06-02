@@ -3,19 +3,17 @@ using UnityEngine;
 
 namespace EyalPhoton.Game
 {
-    [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PlayerInput))]
     public class Movement : MonoBehaviourPun, IPunObservable
     {
-        [SerializeField] private float moveSpeed = 0f;
-        private const float ROOM_BOUNDS_X_MIN = -7.96f;
-        private const float ROOM_BOUNDS_X_MAX = 7.34f;
-        private const float ROOM_BOUNDS_Y_MIN = -3.34f;
-        private const float ROOM_BOUNDS_Y_MAX = 2.92f;
+        [SerializeField] private float moveSpeed = 5f;
+        private Vector2 localPlayerMovement = Vector2.zero;
+        private Rigidbody2D rb = null;
 
         private PlayerInput pInput = null;
         private CharacterController cController = null;
         private Vector2 remotePlayerPos = Vector2.zero;
+        private Vector2 remotePlayerMovement = Vector2.zero;
 
         private bool isInteractingWithBoard = false;
 
@@ -24,6 +22,7 @@ namespace EyalPhoton.Game
         {
             this.cController = GetComponent<CharacterController>();
             this.pInput = GetComponent<PlayerInput>();
+            this.rb = GetComponent<Rigidbody2D>();
         }
 
         // Update is called once per frame
@@ -33,49 +32,26 @@ namespace EyalPhoton.Game
             {
                 if (!isInteractingWithBoard)
                 {
-                    this.applyLocalMovement();
+                    localPlayerMovement = this.pInput.movementInput;
                 }
             }
             else
             {
-                this.applyNetworkMovement();
+                remotePlayerMovement = Vector2.Lerp(transform.position, remotePlayerPos, 0.1f);
             }
         }
 
-        private void applyLocalMovement()
+        void FixedUpdate()
         {
-            Vector2 movement = this.pInput.movementInput;
-            cController.Move(movement * this.moveSpeed * Time.deltaTime);
-            //this.ensureBoundaries();
-        }
-
-        private void applyNetworkMovement()
-        {
-            // Moving the network player 0.05% of the way towards his real position every frame
-            transform.position = Vector2.Lerp(transform.position, remotePlayerPos, 0.05f);
-        }
-
-        private void ensureBoundaries ()
-        {
-            var pos = this.transform.position;
-            if (pos.x < ROOM_BOUNDS_X_MIN)
+            if (this.pInput.isTest || photonView.IsMine)
             {
-                pos.x = ROOM_BOUNDS_X_MIN;
-            } else if (pos.x > ROOM_BOUNDS_X_MAX)
-            {
-                pos.x = ROOM_BOUNDS_X_MAX;
+                rb.MovePosition(rb.position + (localPlayerMovement * this.moveSpeed * Time.deltaTime));
             }
-
-            if (pos.y < ROOM_BOUNDS_Y_MIN)
+            else
             {
-                pos.y = ROOM_BOUNDS_Y_MIN;
+                // Moving the network player % of the way towards his real position every frame
+                transform.position = remotePlayerMovement;
             }
-            else if (pos.y > ROOM_BOUNDS_Y_MAX)
-            {
-                pos.y = ROOM_BOUNDS_Y_MAX;
-            }
-
-            transform.position = pos;
         }
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

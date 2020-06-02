@@ -9,10 +9,14 @@ namespace EyalPhoton.Game.Board
 {
     public class Board : MonoBehaviourPun
     {
-        private const int POSTS_PER_PAGE = 5;
+        [SerializeField] private PostsPage allPostsPage = null;
+        [SerializeField] private PostsPage myPostsPage = null;
+        [SerializeField] private SaturationController satCtrlr = null;
+        [SerializeField] private NotificationManager notifications = null;
 
+        private const int POSTS_PER_PAGE = 5;
         private List<BoardPost> boardPosts = null;
-        public bool shouldRerenderBoard { get; set; }
+        private int commentsLeftToApprove = 4;
 
         void Awake()
         {
@@ -27,28 +31,47 @@ namespace EyalPhoton.Game.Board
         void Start()
         {
             this.boardPosts = new List<BoardPost>();
-            this.shouldRerenderBoard = true;
+            allPostsPage.shouldBoardBeRendered = true;
+            myPostsPage.shouldBoardBeRendered = true;
         }
 
-        public void SendAddPost(BoardPost newPost)
+        private List<BoardPost> GetPostsForMyPostsPage()
         {
-            if (PhotonNetwork.IsConnected)
-                this.photonView.RPC("AddPostFromRemote", RpcTarget.All, newPost);
-            else
-            {
-                this.AddPostFromRemote(newPost);
-            }
+            var myActorNum = PhotonNetwork.LocalPlayer.ActorNumber;
+
+            // All posts that are mine
+            var posts =
+                this.boardPosts.FindAll(currPost =>
+                    currPost.postCreatorActorNum == myActorNum);
+
+            return posts;
         }
 
-        public List<BoardPost> GetPagePosts (int page)
+        private List<BoardPost> GetPostsForAllPostsPage()
         {
-            if (this.boardPosts.Count == 0)
-                return new List<BoardPost>();
+            var myActorNum = PhotonNetwork.LocalPlayer.ActorNumber;
 
-            if (this.boardPosts.Count - (page * POSTS_PER_PAGE) > POSTS_PER_PAGE)
-                return this.boardPosts.GetRange(page * POSTS_PER_PAGE, POSTS_PER_PAGE);
+            // All posts that are not mine + I didn't comment on them
+            var posts =
+                this.boardPosts.FindAll(currPost =>
+                    currPost.postCreatorActorNum != myActorNum)
+                .FindAll(currPost =>
+                    !currPost.didActorCommentOnPost(myActorNum));
 
-            return this.boardPosts.GetRange((page * POSTS_PER_PAGE), this.boardPosts.Count - (page * POSTS_PER_PAGE));
+            return posts;
+        }
+
+        public List<BoardPost> GetPagePosts (bool isAllPosts, int page)
+        {
+            var posts = isAllPosts ? this.GetPostsForAllPostsPage() : this.GetPostsForMyPostsPage();
+
+            if (posts.Count == 0)
+                return posts;
+
+            if (posts.Count - (page * POSTS_PER_PAGE) > POSTS_PER_PAGE)
+                return posts.GetRange(page * POSTS_PER_PAGE, POSTS_PER_PAGE);
+
+            return posts.GetRange((page * POSTS_PER_PAGE), posts.Count - (page * POSTS_PER_PAGE));
         }
 
         public int GetPostsPerPage ()
@@ -56,21 +79,94 @@ namespace EyalPhoton.Game.Board
             return POSTS_PER_PAGE;
         }
 
-        public int GetAmountOfPages ()
+        public int GetAmountOfPages (bool isAllPosts)
         {
-            return (this.boardPosts.Count / POSTS_PER_PAGE);
+            var posts = isAllPosts ? this.GetPostsForAllPostsPage() : this.GetPostsForMyPostsPage();
+
+            return (posts.Count / POSTS_PER_PAGE);
         }
 
+        public BoardPost getBoardPostById(string id)
+        {
+            return this.boardPosts.Find(posts => posts.postId == id);
+        }
+
+        public void SendAddPost(BoardPost newPost)
+        {
+            this.boardPosts.Add(newPost); // add locally
+            this.myPostsPage.shouldBoardBeRendered = true;
+            notifications.NotifyPostSubmitted();
+
+            if (PhotonNetwork.IsConnected)
+                this.photonView.RPC("AddPostFromRemote", RpcTarget.Others, newPost);
+        }
+
+        // Someone adds new post
         [PunRPC]
         void AddPostFromRemote(BoardPost post)
         {
             this.boardPosts.Add(post);
-            this.shouldRerenderBoard = true;
+            this.allPostsPage.shouldBoardBeRendered = true;
+            notifications.NotifyPostAdded();
         }
 
-        public void OpenBoard ()
+        public void SendAddComment(string postId, int commentorActorNum, string comment)
         {
+            // add locally
+            var post = this.boardPosts.Find(currPost => currPost.postId == postId);
+            if (post != null)
+            {
+                post.comments.Add(new PostComment(commentorActorNum, comment));
+            }
+            notifications.NotifyCommentSubmitted();
 
+            if (PhotonNetwork.IsConnected)
+                this.photonView.RPC("AddCommentFromRemote", RpcTarget.Others, postId, commentorActorNum, comment);
+        }
+
+        // Someone comments on a post
+        [PunRPC]
+        void AddCommentFromRemote(string postId, int commentorActorNum, string comment)
+        {
+            var post = this.boardPosts.Find(currPost => currPost.postId == postId);
+
+            if (post != null)
+            {
+                post.comments.Add(new PostComment(commentorActorNum, comment));
+                
+                // Update my posts page if this post is mine
+                if (PhotonNetwork.LocalPlayer.ActorNumber == post.postCreatorActorNum)
+                {
+                    notifications.NotifyCommetOnPost(post.postTitle);
+                    myPostsPage.shouldBoardBeRendered = true;
+                }
+            }
+        }
+
+        public void SendCommentApproved(int commentorActorNum)
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                this.photonView.RPC("CommentApproved", RpcTarget.Others, commentorActorNum);
+            }
+        }
+
+        [PunRPC]
+        void CommentApproved (int commentorActorNum)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == commentorActorNum)
+            {
+                commentsLeftToApprove--;
+                if (commentsLeftToApprove == 0)
+                {
+                    notifications.NotifyFinishedApprovals();
+                } else
+                {
+                    notifications.NotifyApprovedComment();
+                }
+
+                satCtrlr.AddColor();
+            }
         }
     }
 }
