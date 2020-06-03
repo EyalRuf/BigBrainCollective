@@ -33,6 +33,14 @@ MonoBehaviour:
   RpcList:
   - ClickRpc
   - DestroyRpc
+  - SendBoard
+  - RecieveBoardFromMaster
+  - SendBoardToAsker
+  - RecieveBoard
+  - addPost
+  - AddPostFromRemote
+  - AddCommentFromRemote
+  - CommentApproved
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
