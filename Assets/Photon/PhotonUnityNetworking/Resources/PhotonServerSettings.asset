@@ -31,16 +31,11 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
-  - ClickRpc
-  - DestroyRpc
-  - SendBoard
-  - RecieveBoardFromMaster
-  - SendBoardToAsker
-  - RecieveBoard
-  - addPost
-  - AddPostFromRemote
   - AddCommentFromRemote
+  - AddPostFromRemote
+  - ClickRpc
   - CommentApproved
+  - DestroyRpc
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
+  ShowSettings: 1
   DevRegionSetOnce: 1
